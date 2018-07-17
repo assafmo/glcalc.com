@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && mv build/* . && rm -rf build/",
+    "build": "react-scripts build && rm -rf static && mv -f build/* . && rm -rf build/ && sed -i 's|\"/|\"|g' index.html",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

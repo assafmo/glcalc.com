@@ -4,8 +4,6 @@ import glycemicIndex from "./gi.json";
 import "./App.css";
 import "semantic-ui-css/semantic.min.css";
 
-const foods = Object.keys(glycemicIndex);
-
 const low = (
   <Label color="green" pointing="left">
     Low (good)
@@ -91,10 +89,14 @@ class App extends Component {
       </div>
     );
 
-    const gi = +glycemicIndex[this.state.food];
+    let gi, carbsRatio;
+    if (glycemicIndex[this.state.food]) {
+      gi = +glycemicIndex[this.state.food].gi;
+      carbsRatio = +glycemicIndex[this.state.food].carbs_per_100g / 100;
+    }
 
     let giResult;
-    if (this.state.food && Number.isInteger(gi)) {
+    if (Number.isInteger(gi)) {
       // Low: 55 or less
       // Medium: 56 - 69
       // High: 70 or more
@@ -115,12 +117,17 @@ class App extends Component {
     }
 
     let glResult;
-    if (this.state.food && Number.isInteger(gi)) {
+    if (carbsRatio && Number.isInteger(gi)) {
       // Low: 10 or less
       // Medium: 11-19
       // High: 20 or more
 
-      let gl = (gi * this.state.serving * servingFactor[this.state.unit]) / 100;
+      let gl =
+        (gi *
+          this.state.serving *
+          carbsRatio *
+          servingFactor[this.state.unit]) /
+        100;
       gl = Math.round(gl * 100) / 100; //round 2 decimals
 
       let glSummary = low;
@@ -139,7 +146,7 @@ class App extends Component {
     }
 
     return (
-      <div style={{ marginTop: 50, marginLeft: 20 }}>
+      <div style={{ marginLeft: 20 }}>
         <h1>Glycemic load calculator</h1>
         <Divider />
         {searchBox}

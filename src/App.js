@@ -113,6 +113,7 @@ class App extends Component {
         <a
           href="https://www.gisymbol.com/about-glycemic-index/"
           target="_blank"
+          rel="noopener noreferrer"
         >
           {giSummary}
         </a>
@@ -154,6 +155,7 @@ class App extends Component {
         <a
           href="https://www.gisymbol.com/what-about-glycemic-load/"
           target="_blank"
+          rel="noopener noreferrer"
         >
           {glSummary}
         </a>

@@ -68,7 +68,7 @@ class App extends Component {
     const weightUnit = (
       <div style={{ marginTop: 5 }}>
         <Input
-          style={{ width: 90 }}
+          style={{ width: 130 }}
           type="number"
           min="0"
           value={this.state.serving}

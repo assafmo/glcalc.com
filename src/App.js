@@ -188,7 +188,7 @@ class App extends Component {
 
     return (
       <div style={{ marginTop: 10, marginLeft: 20 }}>
-        <h1>Glycemic load</h1>
+        <h1>Glycemic load calculator</h1>
         <Divider />
         {searchBox}
         {weightUnit}
@@ -207,7 +207,8 @@ class App extends Component {
             textAlign: "center"
           }}
         >
-          Made with <span style={{ color: "red" }}>♥</span> by Assaf Morami{" "}
+          Made with <span style={{ fontSize: "large", color: "red" }}>♥</span>{" "}
+          by Assaf Morami{" "}
           <a href="https://github.com/assafmo" style={{ color: "black" }}>
             <Icon name="github" />
           </a>

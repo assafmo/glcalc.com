@@ -50,7 +50,7 @@ class App extends Component {
           list="foods"
           onChange={this.foodChange.bind(this)}
           placeholder="Food"
-          style={{ width: "50%" }}
+          style={{ width: "80%" }}
         />
         <datalist id="foods">
           {Object.keys(glycemicIndex).map((food, idx) => (
@@ -63,6 +63,7 @@ class App extends Component {
     const weightUnit = (
       <div style={{ marginTop: 5 }}>
         <Input
+          style={{ width: "10%" }}
           type="number"
           min="0"
           value={this.state.serving}

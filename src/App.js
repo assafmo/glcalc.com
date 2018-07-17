@@ -96,7 +96,7 @@ class App extends Component {
     }
 
     let giResult;
-    if (Number.isInteger(gi)) {
+    if (this.state.food && Number.isInteger(gi)) {
       // Low: 55 or less
       // Medium: 56 - 69
       // High: 70 or more
@@ -117,7 +117,7 @@ class App extends Component {
     }
 
     let glResult;
-    if (carbsRatio && Number.isInteger(gi)) {
+    if (this.state.food && carbsRatio && Number.isInteger(gi)) {
       // Low: 10 or less
       // Medium: 11-19
       // High: 20 or more

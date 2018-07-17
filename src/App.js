@@ -109,7 +109,9 @@ class App extends Component {
               <Icon name="help circle" />
             </a>
           </Label>
-          {Math.round(this.state.serving * carbsRatio)} ({this.state.unit})
+          {Math.round(this.state.serving * carbsRatio * 10) / 10} ({
+            this.state.unit
+          })
         </div>
       );
     }

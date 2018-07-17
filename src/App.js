@@ -4,6 +4,8 @@ import glycemicIndex from "./gi.json";
 import "./App.css";
 import "semantic-ui-css/semantic.min.css";
 
+const foods = Object.keys(glycemicIndex);
+
 const low = (
   <Label color="green" pointing="left">
     Low (good)
@@ -28,7 +30,11 @@ const servingFactor = {
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { food: "", serving: 50, unit: "g" };
+    this.state = {
+      food: "",
+      serving: 50,
+      unit: "g"
+    };
   }
 
   foodChange(e, data) {
@@ -45,12 +51,13 @@ class App extends Component {
 
   render() {
     const searchBox = (
-      <div style={{ marginTop: 50 }}>
+      <div>
         <Input
+          value={this.state.food}
           list="foods"
           onChange={this.foodChange.bind(this)}
           placeholder="Food"
-          style={{ width: "80%" }}
+          style={{ width: "95%" }}
         />
         <datalist id="foods">
           {Object.keys(glycemicIndex).map((food, idx) => (
@@ -132,7 +139,9 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
+      <div style={{ marginTop: 50, marginLeft: 20 }}>
+        <h1>Glycemic load calculator</h1>
+        <Divider />
         {searchBox}
         {weightUnit}
         <Divider />

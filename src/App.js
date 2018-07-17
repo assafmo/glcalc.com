@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dropdown, Input, Label, Divider } from "semantic-ui-react";
+import { Dropdown, Icon, Input, Label, Divider } from "semantic-ui-react";
 import glycemicIndex from "./gi.json";
 import "./App.css";
 import "semantic-ui-css/semantic.min.css";
@@ -30,7 +30,7 @@ class App extends Component {
     super(props);
     this.state = {
       food: "",
-      serving: 50,
+      serving: 100,
       unit: "g"
     };
   }
@@ -95,6 +95,25 @@ class App extends Component {
       carbsRatio = +glycemicIndex[this.state.food].carbs_per_100g / 100;
     }
 
+    let carbsResult;
+    if (this.state.food && Number.isInteger(gi)) {
+      carbsResult = (
+        <div>
+          <Label size="large" horizontal>
+            Carbohydrates{" "}
+            <a
+              href="https://www.gisymbol.com/carbohydrates"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon name="help circle" />
+            </a>
+          </Label>
+          {Math.round(this.state.serving * carbsRatio)} ({this.state.unit})
+        </div>
+      );
+    }
+
     let giResult;
     if (this.state.food && Number.isInteger(gi)) {
       // Low: 55 or less
@@ -109,20 +128,17 @@ class App extends Component {
         giSummary = high;
       }
 
-      giSummary = (
-        <a
-          href="https://www.gisymbol.com/about-glycemic-index/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {giSummary}
-        </a>
-      );
-
       giResult = (
-        <div>
+        <div style={{ marginTop: 5 }}>
           <Label size="large" horizontal>
-            Glycemic index
+            Glycemic index{" "}
+            <a
+              href="https://www.gisymbol.com/about-glycemic-index"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon name="help circle" />
+            </a>
           </Label>
           {gi} {giSummary}
         </div>
@@ -151,20 +167,17 @@ class App extends Component {
         glSummary = high;
       }
 
-      glSummary = (
-        <a
-          href="https://www.gisymbol.com/what-about-glycemic-load/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {glSummary}
-        </a>
-      );
-
       glResult = (
         <div style={{ marginTop: 5 }}>
           <Label size="large" horizontal>
-            Glycemic laod
+            Glycemic load{" "}
+            <a
+              href="https://www.gisymbol.com/what-about-glycemic-load"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Icon name="help circle" />
+            </a>
           </Label>
           {gl} {glSummary}
         </div>
@@ -172,14 +185,31 @@ class App extends Component {
     }
 
     return (
-      <div style={{ marginLeft: 20 }}>
-        <h1>Glycemic load calculator</h1>
+      <div style={{ marginTop: 10, marginLeft: 20 }}>
+        <h1>Glycemic load</h1>
         <Divider />
         {searchBox}
         {weightUnit}
         <Divider />
+        {carbsResult}
         {giResult}
         {glResult}
+        <div
+          style={{
+            position: "fixed",
+            left: 0,
+            bottom: 0,
+            width: "100%",
+            backgroundColor: "#e7e7e7",
+            color: "black",
+            textAlign: "center"
+          }}
+        >
+          Made with <span style={{ color: "red" }}>♥</span> by Assaf Morami{" "}
+          <a href="https://github.com/assafmo" style={{ color: "black" }}>
+            <Icon name="github" />
+          </a>
+        </div>
       </div>
     );
   }

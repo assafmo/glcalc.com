@@ -6,7 +6,7 @@ import "semantic-ui-css/semantic.min.css";
 
 const low = (
   <Label color="green" pointing="left">
-    Low (good)
+    Low
   </Label>
 );
 const medium = (
@@ -16,7 +16,7 @@ const medium = (
 );
 const high = (
   <Label color="red" pointing="left">
-    High (Bad)
+    High
   </Label>
 );
 
@@ -109,9 +109,21 @@ class App extends Component {
         giSummary = high;
       }
 
+      giSummary = (
+        <a
+          href="https://www.gisymbol.com/about-glycemic-index/"
+          target="_blank"
+        >
+          {giSummary}
+        </a>
+      );
+
       giResult = (
         <div>
-          Glycemic index: {gi} {giSummary}
+          <Label size="large" horizontal>
+            Glycemic index
+          </Label>
+          {gi} {giSummary}
         </div>
       );
     }
@@ -138,9 +150,21 @@ class App extends Component {
         glSummary = high;
       }
 
+      glSummary = (
+        <a
+          href="https://www.gisymbol.com/what-about-glycemic-load/"
+          target="_blank"
+        >
+          {glSummary}
+        </a>
+      );
+
       glResult = (
         <div style={{ marginTop: 5 }}>
-          Glycemic laod: {gl} {glSummary}
+          <Label size="large" horizontal>
+            Glycemic laod
+          </Label>
+          {gl} {glSummary}
         </div>
       );
     }

@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && rm -rf static && mv -f build/* . && rm -rf build/ && sed -i 's|\"/|\"|g' index.html && sed -i 's|\"/static|\"static|g' service-worker.js",
+    "build": "react-scripts build && rm -rf static && mv -f build/* . && rm -rf build/ && sed -i 's|\"/|\"./|g' index.html service-worker.js | sed -i 's|url(/|url(../../|g' static/css/main*css",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

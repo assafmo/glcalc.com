@@ -102,7 +102,7 @@ class App extends Component {
           <Label size="large" horizontal>
             Carbohydrates{" "}
             <a
-              href="https://www.gisymbol.com/carbohydrates"
+              href="https://www.gisymbol.com/carbohydrates/"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -133,7 +133,7 @@ class App extends Component {
           <Label size="large" horizontal>
             Glycemic index{" "}
             <a
-              href="https://www.gisymbol.com/about-glycemic-index"
+              href="https://www.gisymbol.com/about-glycemic-index/"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -172,7 +172,7 @@ class App extends Component {
           <Label size="large" horizontal>
             Glycemic load{" "}
             <a
-              href="https://www.gisymbol.com/what-about-glycemic-load"
+              href="https://www.gisymbol.com/what-about-glycemic-load/"
               target="_blank"
               rel="noopener noreferrer"
             >

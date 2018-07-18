@@ -16,12 +16,14 @@ const workercode = () => {
         .filter(food => food.toLowerCase().includes(query))
         .map(food => ({ title: food, gi: glycemicIndex[food].gi }));
 
-      if (results.length > 50) {
+      const maxResults = 20;
+      if (results.length > maxResults) {
         //eslint-disable-next-line
         self.postMessage({
-          results: results
-            .slice(0, 50)
-            .concat({ title: "Too many results", more: results.length - 50 })
+          results: results.slice(0, maxResults).concat({
+            title: "Too many results.",
+            more: results.length - maxResults
+          })
         });
       } else {
         //eslint-disable-next-line

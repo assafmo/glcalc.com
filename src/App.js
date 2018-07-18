@@ -61,7 +61,10 @@ class App extends Component {
       document.getElementById("searchBar").focus();
       return;
     }
+
     this.setState({ food: result.title });
+
+    worker.postMessage({ query: result.title });
   };
 
   handleSearchInputChange = (e, { value }) => {
@@ -69,7 +72,6 @@ class App extends Component {
       this.setState({ isLoading: false, food: "" });
       return;
     }
-
     this.setState({ isLoading: true, food: value });
 
     worker.postMessage({ query: value });

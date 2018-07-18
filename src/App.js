@@ -17,6 +17,22 @@ import "./App.css";
 const worker = new Worker(workerScript);
 worker.postMessage({ setGlycemicIndex: glycemicIndex });
 
+function getColorForGI(gi) {
+  // Low: 55 or less
+  // Medium: 56 - 69
+  // High: 70 or more
+
+  if (gi <= 55) {
+    return "green";
+  }
+  if (gi > 55 && gi < 70) {
+    return "orange";
+  }
+  if (gi >= 70) {
+    return "red";
+  }
+}
+
 const low = (
   <Label color="green" pointing="left">
     Low
@@ -121,7 +137,8 @@ class App extends Component {
       }
       return (
         <div>
-          <b>{result.title}</b> <Label color="teal">GI: {result.gi}</Label>
+          <b>{result.title}</b>{" "}
+          <Label color={getColorForGI(result.gi)}>GI: {result.gi}</Label>
         </div>
       );
     };

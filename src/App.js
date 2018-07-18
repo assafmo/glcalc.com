@@ -17,42 +17,37 @@ import "./App.css";
 const worker = new Worker(workerScript);
 worker.postMessage({ setGlycemicIndex: glycemicIndex });
 
-function getColorForGI(gi) {
+function getColorOrTextForGI(gi, isText) {
   // Low: 55 or less
   // Medium: 56 - 69
   // High: 70 or more
 
   if (gi <= 55) {
-    return "green";
+    return isText ? "Low" : "green";
   }
   if (gi > 55 && gi < 70) {
-    return "orange";
+    return isText ? "Medium" : "orange";
   }
   if (gi >= 70) {
-    return "red";
+    return isText ? "High" : "red";
   }
 }
 
-const low = (
-  <Label color="green" pointing="left">
-    Low
-  </Label>
-);
-const medium = (
-  <Label color="orange" pointing="left">
-    Medium
-  </Label>
-);
-const high = (
-  <Label color="red" pointing="left">
-    High
-  </Label>
-);
+function getColorOrTextForGL(gl, isText) {
+  // Low: 10 or less
+  // Medium: 11-19
+  // High: 20 or more
 
-const servingFactor = {
-  g: 1,
-  oz: 28.3495231
-};
+  if (gl <= 10) {
+    return isText ? "Low" : "green";
+  }
+  if (gl > 10 && gl < 20) {
+    return isText ? "Medium" : "orange";
+  }
+  if (gl >= 20) {
+    return isText ? "High" : "red";
+  }
+}
 
 class App extends Component {
   constructor(props) {
@@ -138,7 +133,7 @@ class App extends Component {
       return (
         <div>
           <b>{result.title}</b>{" "}
-          <Label size="small" color={getColorForGI(result.gi)}>
+          <Label size="small" color={getColorOrTextForGI(result.gi)}>
             GI: {result.gi}
           </Label>
         </div>
@@ -223,20 +218,10 @@ class App extends Component {
       return null;
     }
 
-    // Low: 10 or less
-    // Medium: 11-19
-    // High: 20 or more
-    let gl =
-      (gi * this.state.serving * carbsRatio * servingFactor[this.state.unit]) /
-      100;
+    const servingFactor = { g: 1, oz: 28.3495231 }[this.state.unit];
+    let gl = (gi * this.state.serving * carbsRatio * servingFactor) / 100;
     gl = Math.round(gl * 100) / 100; //round 2 decimals
-    let glSummary = low;
-    if (gl > 10 && gl < 20) {
-      glSummary = medium;
-    }
-    if (gl >= 20) {
-      glSummary = high;
-    }
+
     return (
       <div style={{ marginTop: 5 }}>
         <Label size="large" horizontal>
@@ -249,7 +234,10 @@ class App extends Component {
             <Icon name="help circle" />
           </a>
         </Label>
-        {gl} {glSummary}
+        {gl}{" "}
+        <Label color={getColorOrTextForGL(gl)} pointing="left">
+          {getColorOrTextForGL(gl, true)}
+        </Label>
       </div>
     );
   };
@@ -259,16 +247,6 @@ class App extends Component {
       return null;
     }
 
-    // Low: 55 or less
-    // Medium: 56 - 69
-    // High: 70 or more
-    let giSummary = low;
-    if (gi > 55 && gi < 70) {
-      giSummary = medium;
-    }
-    if (gi >= 70) {
-      giSummary = high;
-    }
     return (
       <div style={{ marginTop: 5 }}>
         <Label size="large" horizontal>
@@ -281,7 +259,10 @@ class App extends Component {
             <Icon name="help circle" />
           </a>
         </Label>
-        {gi} {giSummary}
+        {gi}{" "}
+        <Label color={getColorOrTextForGI(gi)} pointing="left">
+          {getColorOrTextForGI(gi, true)}
+        </Label>
       </div>
     );
   };

@@ -138,7 +138,9 @@ class App extends Component {
       return (
         <div>
           <b>{result.title}</b>{" "}
-          <Label color={getColorForGI(result.gi)}>GI: {result.gi}</Label>
+          <Label size="small" color={getColorForGI(result.gi)}>
+            GI: {result.gi}
+          </Label>
         </div>
       );
     };

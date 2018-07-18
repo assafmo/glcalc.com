@@ -21,7 +21,7 @@ const workercode = () => {
 
       //eslint-disable-next-line
       self.postMessage({
-        results: results.slice(0, 100)
+        results: results.slice(0, 50)
       });
       return;
     }

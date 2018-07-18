@@ -12,14 +12,16 @@ const workercode = () => {
     if (query && glycemicIndex && foods) {
       query = query.trim().toLowerCase();
 
+      const results = foods
+        .filter(food => food.toLowerCase().includes(query))
+        .map(food => ({
+          title: food,
+          gi: glycemicIndex[food].gi
+        }));
+
       //eslint-disable-next-line
       self.postMessage({
-        results: foods
-          .filter(food => food.toLowerCase().includes(query))
-          .map(food => ({
-            title: food,
-            gi: glycemicIndex[food].gi
-          }))
+        results: results.slice(0, 100)
       });
       return;
     }

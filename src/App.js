@@ -7,11 +7,11 @@ import {
   Divider,
   Search
 } from "semantic-ui-react";
+import PropTypes from "prop-types";
+import workerScript from "./SearchWorker.js";
 import glycemicIndex from "./gi.json";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
-import PropTypes from "prop-types";
-import workerScript from "./SearchWorker.js";
 
 // const foods = Object.keys(glycemicIndex).sort();
 const worker = new Worker(workerScript);

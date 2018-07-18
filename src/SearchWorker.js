@@ -1,8 +1,8 @@
-let self; // so it'll shut up
 const workercode = () => {
   let glycemicIndex;
   let foods;
 
+  //eslint-disable-next-line
   self.onmessage = ({ data: { query, setGlycemicIndex } }) => {
     if (setGlycemicIndex) {
       glycemicIndex = setGlycemicIndex;
@@ -12,10 +12,14 @@ const workercode = () => {
     if (query && glycemicIndex && foods) {
       query = query.trim().toLowerCase();
 
+      //eslint-disable-next-line
       self.postMessage({
         results: foods
           .filter(food => food.toLowerCase().includes(query))
-          .map(food => ({ title: food, gi: glycemicIndex[food].gi }))
+          .map(food => ({
+            title: food,
+            gi: glycemicIndex[food].gi
+          }))
       });
       return;
     }

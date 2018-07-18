@@ -1,4 +1,4 @@
-let self;
+let self; // so it'll shut up
 const workercode = () => {
   let glycemicIndex;
   let foods;

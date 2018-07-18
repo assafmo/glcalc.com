@@ -70,8 +70,10 @@ class App extends Component {
   };
 
   handleSearchDone = ({ data: { results } }) => {
-    this.setState({ isLoading: false, results: results });
-    console.log(results.length);
+    this.setState({
+      isLoading: false,
+      results: results
+    });
   };
 
   render() {

@@ -130,7 +130,7 @@ class App extends Component {
     const resultRenderer = result => {
       if (result.more) {
         return (
-          <b style={{ pointerEvents: "none", color: "red" }}>
+          <b style={{ color: "red" }}>
             {result.more} more results. Please refine your search.
           </b>
         );

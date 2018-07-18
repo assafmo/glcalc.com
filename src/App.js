@@ -1,10 +1,21 @@
 import React, { Component } from "react";
-import { Dropdown, Icon, Input, Label, Divider } from "semantic-ui-react";
+import {
+  Dropdown,
+  Icon,
+  Input,
+  Label,
+  Divider,
+  Search
+} from "semantic-ui-react";
 import glycemicIndex from "./gi.json";
-import "./App.css";
 import "semantic-ui-css/semantic.min.css";
+import "./App.css";
+import PropTypes from "prop-types";
+import workerScript from "./SearchWorker.js";
 
-const foods = Object.keys(glycemicIndex).sort();
+// const foods = Object.keys(glycemicIndex).sort();
+const worker = new Worker(workerScript);
+worker.postMessage({ setGlycemicIndex: glycemicIndex });
 
 const low = (
   <Label color="green" pointing="left">
@@ -33,189 +44,226 @@ class App extends Component {
     this.state = {
       food: "",
       serving: 100,
-      unit: "g"
+      unit: "g",
+      isLoading: false,
+      results: []
     };
+
+    worker.onmessage = this.handleSearchDone;
   }
 
-  foodChange(e, data) {
-    this.setState({ food: data.value });
-  }
+  handleServingSizeChange = (e, { value }) => this.setState({ serving: value });
 
-  servingChange(e, data) {
-    this.setState({ serving: data.value });
-  }
+  unitChange = (e, { value }) => this.setState({ unit: value });
 
-  unitChange(e, data) {
-    this.setState({ unit: data.value });
-  }
+  handleResultSelect = (e, { result }) => this.setState({ food: result.title });
+
+  handleSearchInputChange = (e, { value }) => {
+    if (!value) {
+      this.setState({ isLoading: false, food: "" });
+      return;
+    }
+
+    this.setState({ isLoading: true, food: value });
+
+    worker.postMessage({ query: value });
+  };
+
+  handleSearchDone = ({ data: { results } }) => {
+    this.setState({ isLoading: false, results: results });
+    console.log(results.length);
+  };
 
   render() {
-    const searchBox = (
-      <div>
-        <Input
-          value={this.state.food}
-          list="foods"
-          onChange={this.foodChange.bind(this)}
-          placeholder="Food"
-          style={{ width: "95%" }}
-        />
-        <datalist id="foods">
-          {foods.map((food, idx) => <option key={idx} value={food} />)}
-        </datalist>
+    let giValue, carbsRatio;
+    if (glycemicIndex[this.state.food]) {
+      giValue = +glycemicIndex[this.state.food].gi;
+      carbsRatio = +glycemicIndex[this.state.food].carbs_per_100g / 100;
+    }
+
+    return (
+      <div style={{ margin: 20 }}>
+        <h1>Glycemic load calculator</h1>
+        <Divider />
+        {this.getSearchInput()}
+        {this.getServingSizeInput()}
+        <Divider />
+        {this.getCarbsResults(giValue, carbsRatio)}
+        {this.getGIResult(giValue)}
+        {this.getGLResult(carbsRatio, giValue)}
+        {this.getFooter()}
       </div>
     );
+  }
 
-    const weightUnit = (
+  getSearchInput = () => {
+    const resultRenderer = result => (
+      <div>
+        <b>{result.title}</b> <Label color="teal">GI: {result.gi}</Label>
+      </div>
+    );
+    resultRenderer.propTypes = {
+      food: PropTypes.string,
+      gi: PropTypes.number
+    };
+    const searchInput = (
+      <Search
+        placeholder="Food"
+        loading={this.state.isLoading}
+        onResultSelect={this.handleResultSelect}
+        onSearchChange={this.handleSearchInputChange}
+        results={this.state.results}
+        value={this.state.food}
+        fluid
+        resultRenderer={resultRenderer}
+      />
+    );
+    return searchInput;
+  };
+
+  getServingSizeInput = () => {
+    return (
       <div style={{ marginTop: 5 }}>
         <Input
-          style={{ width: 130 }}
+          style={{ width: 125 }}
           type="number"
           min="0"
           value={this.state.serving}
           label={
             <Dropdown
+              style={{
+                borderTopRightRadius: "50px",
+                borderBottomRightRadius: "50px"
+              }}
               defaultValue="g"
               options={[
                 { key: "g", text: "g", value: "g" },
                 { key: "oz", text: "oz", value: "oz" }
               ]}
-              onChange={this.unitChange.bind(this)}
+              onChange={this.unitChange}
             />
           }
           labelPosition="right"
           placeholder="Serving Size"
-          onChange={this.servingChange.bind(this)}
+          onChange={this.handleServingSizeChange}
         />
       </div>
     );
+  };
 
-    let gi, carbsRatio;
-    if (glycemicIndex[this.state.food]) {
-      gi = +glycemicIndex[this.state.food].gi;
-      carbsRatio = +glycemicIndex[this.state.food].carbs_per_100g / 100;
-    }
-
-    let carbsResult;
-    if (this.state.food && Number.isInteger(gi)) {
-      carbsResult = (
-        <div>
-          <Label size="large" horizontal>
-            Carbohydrates{" "}
-            <a
-              href="https://www.gisymbol.com/carbohydrates/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Icon name="help circle" />
-            </a>
-          </Label>
-          {Math.round(this.state.serving * carbsRatio * 10) / 10} ({
-            this.state.unit
-          })
-        </div>
-      );
-    }
-
-    let giResult;
-    if (this.state.food && Number.isInteger(gi)) {
-      // Low: 55 or less
-      // Medium: 56 - 69
-      // High: 70 or more
-
-      let giSummary = low;
-      if (gi > 55 && gi < 70) {
-        giSummary = medium;
-      }
-      if (gi >= 70) {
-        giSummary = high;
-      }
-
-      giResult = (
-        <div style={{ marginTop: 5 }}>
-          <Label size="large" horizontal>
-            Glycemic index{" "}
-            <a
-              href="https://www.gisymbol.com/about-glycemic-index/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Icon name="help circle" />
-            </a>
-          </Label>
-          {gi} {giSummary}
-        </div>
-      );
-    }
-
-    let glResult;
-    if (this.state.food && carbsRatio && Number.isInteger(gi)) {
-      // Low: 10 or less
-      // Medium: 11-19
-      // High: 20 or more
-
-      let gl =
-        (gi *
-          this.state.serving *
-          carbsRatio *
-          servingFactor[this.state.unit]) /
-        100;
-      gl = Math.round(gl * 100) / 100; //round 2 decimals
-
-      let glSummary = low;
-      if (gl > 10 && gl < 20) {
-        glSummary = medium;
-      }
-      if (gl >= 20) {
-        glSummary = high;
-      }
-
-      glResult = (
-        <div style={{ marginTop: 5 }}>
-          <Label size="large" horizontal>
-            Glycemic load{" "}
-            <a
-              href="https://www.gisymbol.com/what-about-glycemic-load/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Icon name="help circle" />
-            </a>
-          </Label>
-          {gl} {glSummary}
-        </div>
-      );
+  getCarbsResults = (gi, carbsRatio) => {
+    if (!(this.state.food && Number.isInteger(gi))) {
+      return null;
     }
 
     return (
-      <div style={{ marginTop: 10, marginLeft: 20 }}>
-        <h1>Glycemic load calculator</h1>
-        <Divider />
-        {searchBox}
-        {weightUnit}
-        <Divider />
-        {carbsResult}
-        {giResult}
-        {glResult}
-        <div
-          style={{
-            position: "fixed",
-            left: 0,
-            bottom: 0,
-            width: "100%",
-            backgroundColor: "#e7e7e7",
-            color: "black",
-            textAlign: "center"
-          }}
-        >
-          Made with <span style={{ fontSize: "large", color: "red" }}>♥</span>{" "}
-          by Assaf Morami{" "}
-          <a href="https://github.com/assafmo" style={{ color: "black" }}>
-            <Icon name="github" />
+      <div>
+        <Label size="large" horizontal>
+          Carbohydrates{" "}
+          <a
+            href="https://www.gisymbol.com/carbohydrates/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="help circle" />
           </a>
-        </div>
+        </Label>
+        {Math.round(this.state.serving * carbsRatio * 10) / 10} ({
+          this.state.unit
+        })
       </div>
     );
-  }
+  };
+
+  getGLResult = (carbsRatio, gi) => {
+    if (!(this.state.food && carbsRatio && Number.isInteger(gi))) {
+      return null;
+    }
+
+    // Low: 10 or less
+    // Medium: 11-19
+    // High: 20 or more
+    let gl =
+      (gi * this.state.serving * carbsRatio * servingFactor[this.state.unit]) /
+      100;
+    gl = Math.round(gl * 100) / 100; //round 2 decimals
+    let glSummary = low;
+    if (gl > 10 && gl < 20) {
+      glSummary = medium;
+    }
+    if (gl >= 20) {
+      glSummary = high;
+    }
+    return (
+      <div style={{ marginTop: 5 }}>
+        <Label size="large" horizontal>
+          Glycemic load{" "}
+          <a
+            href="https://www.gisymbol.com/what-about-glycemic-load/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="help circle" />
+          </a>
+        </Label>
+        {gl} {glSummary}
+      </div>
+    );
+  };
+
+  getGIResult = gi => {
+    if (!this.state.food || !Number.isInteger(gi)) {
+      return null;
+    }
+
+    // Low: 55 or less
+    // Medium: 56 - 69
+    // High: 70 or more
+    let giSummary = low;
+    if (gi > 55 && gi < 70) {
+      giSummary = medium;
+    }
+    if (gi >= 70) {
+      giSummary = high;
+    }
+    return (
+      <div style={{ marginTop: 5 }}>
+        <Label size="large" horizontal>
+          Glycemic index{" "}
+          <a
+            href="https://www.gisymbol.com/about-glycemic-index/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Icon name="help circle" />
+          </a>
+        </Label>
+        {gi} {giSummary}
+      </div>
+    );
+  };
+
+  getFooter = () => {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          left: 0,
+          bottom: 0,
+          width: "100%",
+          backgroundColor: "#e7e7e7",
+          color: "black",
+          textAlign: "center"
+        }}
+      >
+        Made with <span style={{ fontSize: "large", color: "red" }}>♥</span> by
+        Assaf Morami{" "}
+        <a href="https://github.com/assafmo" style={{ color: "black" }}>
+          <Icon name="github" />
+        </a>
+      </div>
+    );
+  };
 }
 
 export default App;

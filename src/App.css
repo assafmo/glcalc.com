@@ -1,0 +1,10 @@
+/* input food style */
+#root > div > div.ui.fluid.search > div.ui.icon.input {
+  width: 100% !important;
+}
+
+/* serving size style */
+#root > div > div:nth-child(4) > div > input[type="number"] {
+  border-top-left-radius: 50px !important;
+  border-bottom-left-radius: 50px !important;
+}

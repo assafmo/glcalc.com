@@ -14,15 +14,19 @@ const workercode = () => {
 
       const results = foods
         .filter(food => food.toLowerCase().includes(query))
-        .map(food => ({
-          title: food,
-          gi: glycemicIndex[food].gi
-        }));
+        .map(food => ({ title: food, gi: glycemicIndex[food].gi }));
 
-      //eslint-disable-next-line
-      self.postMessage({
-        results: results.slice(0, 50)
-      });
+      if (results.length > 50) {
+        //eslint-disable-next-line
+        self.postMessage({
+          results: results
+            .slice(0, 50)
+            .concat({ title: "Too many results", more: results.length - 50 })
+        });
+      } else {
+        //eslint-disable-next-line
+        self.postMessage({ results });
+      }
       return;
     }
   };

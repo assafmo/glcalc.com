@@ -56,7 +56,13 @@ class App extends Component {
 
   unitChange = (e, { value }) => this.setState({ unit: value });
 
-  handleResultSelect = (e, { result }) => this.setState({ food: result.title });
+  handleResultSelect = (e, { result }) => {
+    if (result.more) {
+      document.getElementById("searchBar").focus();
+      return;
+    }
+    this.setState({ food: result.title });
+  };
 
   handleSearchInputChange = (e, { value }) => {
     if (!value) {
@@ -74,6 +80,10 @@ class App extends Component {
       isLoading: false,
       results: results
     });
+  };
+
+  componentDidMount = () => {
+    document.getElementById("searchBar").focus();
   };
 
   render() {
@@ -99,17 +109,27 @@ class App extends Component {
   }
 
   getSearchInput = () => {
-    const resultRenderer = result => (
-      <div>
-        <b>{result.title}</b> <Label color="teal">GI: {result.gi}</Label>
-      </div>
-    );
+    const resultRenderer = result => {
+      if (result.more) {
+        return (
+          <b style={{ pointerEvents: "none", color: "red" }}>
+            {result.more} more results. Please refine your search.
+          </b>
+        );
+      }
+      return (
+        <div>
+          <b>{result.title}</b> <Label color="teal">GI: {result.gi}</Label>
+        </div>
+      );
+    };
     resultRenderer.propTypes = {
       food: PropTypes.string,
       gi: PropTypes.number
     };
     const searchInput = (
       <Search
+        id="searchBar"
         placeholder="Food"
         loading={this.state.isLoading}
         onResultSelect={this.handleResultSelect}

@@ -4,6 +4,8 @@ import glycemicIndex from "./gi.json";
 import "./App.css";
 import "semantic-ui-css/semantic.min.css";
 
+const foods = Object.keys(glycemicIndex).sort();
+
 const low = (
   <Label color="green" pointing="left">
     Low
@@ -58,9 +60,7 @@ class App extends Component {
           style={{ width: "95%" }}
         />
         <datalist id="foods">
-          {Object.keys(glycemicIndex).map((food, idx) => (
-            <option key={idx} value={food} />
-          ))}
+          {foods.map((food, idx) => <option key={idx} value={food} />)}
         </datalist>
       </div>
     );

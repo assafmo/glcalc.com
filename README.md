@@ -1,1 +1,1 @@
-Glycemic load calculator https://assafmo.github.io/gl-calc/
+Glycemic load calculator https://glcalc.com

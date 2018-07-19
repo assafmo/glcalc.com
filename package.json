@@ -1,7 +1,6 @@
 {
   "name": "gl-calc",
   "version": "0.0.1",
-  "homepage": "https://assafmo.github.io/gl-calc",
   "dependencies": {
     "gh-pages": "^1.2.0",
     "react": "^16.4.1",

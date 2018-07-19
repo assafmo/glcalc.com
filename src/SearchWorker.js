@@ -16,7 +16,7 @@ const workercode = () => {
         .filter(food => food.toLowerCase().includes(query))
         .map(food => ({ title: food, gi: glycemicIndex[food].gi }));
 
-      const maxResults = 20;
+      const maxResults = 25;
       if (results.length > maxResults) {
         //eslint-disable-next-line
         self.postMessage({

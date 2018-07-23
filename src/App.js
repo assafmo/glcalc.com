@@ -108,7 +108,7 @@ class App extends Component {
 
     return (
       <div style={{ margin: 20 }}>
-        <h1>Glycemic load calculator</h1>
+        <h1>Glycemic Load Calculator</h1>
         <Divider />
         {this.getSearchInput()}
         {this.getServingSizeInput()}

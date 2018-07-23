@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "Glycemic Load Calculator",
+  "short_name": "GL Calc",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",

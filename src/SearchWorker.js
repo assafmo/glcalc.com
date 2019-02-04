@@ -6,7 +6,7 @@ const workercode = () => {
   self.onmessage = ({ data: { query, setGlycemicIndex } }) => {
     if (setGlycemicIndex) {
       glycemicIndex = setGlycemicIndex;
-      foods = Object.keys(glycemicIndex).sort();
+      foods = Object.keys(glycemicIndex).sort((a, b) => a.length - b.length);
       return;
     }
     if (query && glycemicIndex && foods) {

@@ -112,7 +112,6 @@ class App extends Component {
         <Divider />
         {this.getSearchInput()}
         {this.getServingSizeInput()}
-        <Divider />
         {this.getCarbsResults(giValue, carbsRatio)}
         {this.getGIResult(giValue)}
         {this.getGLResult(carbsRatio, giValue)}
@@ -196,6 +195,7 @@ class App extends Component {
 
     return (
       <div>
+        <Divider />
         <Label size="large" horizontal>
           Carbohydrates{" "}
           <a
@@ -206,9 +206,8 @@ class App extends Component {
             <Icon name="help circle" />
           </a>
         </Label>
-        {Math.round(this.state.serving * carbsRatio * 10) / 10} ({
-          this.state.unit
-        })
+        {Math.round(this.state.serving * carbsRatio * 10) / 10} (
+        {this.state.unit})
       </div>
     );
   };

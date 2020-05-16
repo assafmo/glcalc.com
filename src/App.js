@@ -5,7 +5,7 @@ import {
   Input,
   Label,
   Divider,
-  Search
+  Search,
 } from "semantic-ui-react";
 import PropTypes from "prop-types";
 import workerScript from "./SearchWorker.js";
@@ -57,7 +57,7 @@ class App extends Component {
       serving: 100,
       unit: "g",
       isLoading: false,
-      results: []
+      results: [],
     };
 
     worker.onmessage = this.handleSearchDone;
@@ -91,7 +91,7 @@ class App extends Component {
   handleSearchDone = ({ data: { results } }) => {
     this.setState({
       isLoading: false,
-      results: results
+      results: results,
     });
   };
 
@@ -121,7 +121,7 @@ class App extends Component {
   }
 
   getSearchInput = () => {
-    const resultRenderer = result => {
+    const resultRenderer = (result) => {
       if (result.more) {
         return (
           <b style={{ color: "red" }}>
@@ -140,7 +140,7 @@ class App extends Component {
     };
     resultRenderer.propTypes = {
       food: PropTypes.string,
-      gi: PropTypes.number
+      gi: PropTypes.number,
     };
     const searchInput = (
       <Search
@@ -170,12 +170,12 @@ class App extends Component {
             <Dropdown
               style={{
                 borderTopRightRadius: "50px",
-                borderBottomRightRadius: "50px"
+                borderBottomRightRadius: "50px",
               }}
               defaultValue="g"
               options={[
                 { key: "g", text: "g", value: "g" },
-                { key: "oz", text: "oz", value: "oz" }
+                { key: "oz", text: "oz", value: "oz" },
               ]}
               onChange={this.unitChange}
             />
@@ -241,7 +241,7 @@ class App extends Component {
     );
   };
 
-  getGIResult = gi => {
+  getGIResult = (gi) => {
     if (!this.state.food || !Number.isInteger(gi)) {
       return null;
     }
@@ -276,12 +276,16 @@ class App extends Component {
           width: "100%",
           backgroundColor: "#e7e7e7",
           color: "black",
-          textAlign: "center"
+          textAlign: "center",
         }}
       >
-        Made with <span style={{ fontSize: "large", color: "red" }}>♥</span> by
-        Assaf Morami{" "}
-        <a href="https://github.com/assafmo" style={{ color: "black" }}>
+        Made with <Icon style={{ color: "red" }} name="heart" />
+        by Assaf Morami{" "}
+        <a
+          href="https://github.com/assafmo"
+          target="_blank"
+          style={{ color: "black" }}
+        >
           <Icon name="github" />
         </a>
       </div>

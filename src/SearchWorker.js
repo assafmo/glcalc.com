@@ -13,8 +13,8 @@ const workercode = () => {
       query = query.trim().toLowerCase();
 
       const results = foods
-        .filter(food => food.toLowerCase().includes(query))
-        .map(food => ({ title: food, gi: glycemicIndex[food].gi }));
+        .filter((food) => food.toLowerCase().includes(query))
+        .map((food) => ({ title: food, gi: glycemicIndex[food].gi }));
 
       const maxResults = 25;
       if (results.length > maxResults) {
@@ -22,8 +22,8 @@ const workercode = () => {
         self.postMessage({
           results: results.slice(0, maxResults).concat({
             title: "Too many results.",
-            more: results.length - maxResults
-          })
+            more: results.length - maxResults,
+          }),
         });
       } else {
         //eslint-disable-next-line

@@ -8,10 +8,25 @@
     "semantic-ui-react": "2.0.1"
   },
   "devDependencies": {
-    "parcel-bundler": "1.12.4"
+    "parcel-bundler": "1.12.4",
+    "parcel-plugin-pwa-manifest": "3.0.10"
   },
   "scripts": {
     "start": "parcel public/index.html",
     "build": "parcel build public/index.html"
+  },
+  "pwaManifest": {
+    "name": "Glycemic Load Calculator",
+    "shortName": "GL Calc",
+    "theme": "#ffffff",
+    "generateIconOptions": {
+      "baseIcon": "./public/pizza.png",
+      "sizes": [
+        192,
+        384,
+        512
+      ],
+      "genFavicons": true
+    }
   }
 }
